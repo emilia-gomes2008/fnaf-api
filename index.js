@@ -1,14 +1,10 @@
-const express = require("express");
-const { CHARS } = require("./database");
-const { BOOKS } = require("./books_database");
-
-const app = express();
-const PORT = process.env.PORT || 3000;
+import { CHARS } from "./database.js";
+import { BOOKS } from "./books_database.js";
 
 // ─── Data setup ───────────────────────────────────────────────────────────────
 
 const characters = CHARS.map((char, index) => ({ id: index + 1, ...char }));
-const books = BOOKS.map((book, index) => ({ id: index + 1, ...book }));
+const books      = BOOKS.map((book, index) => ({ id: index + 1, ...book }));
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -36,23 +32,57 @@ function matchesBookQuery(book, query) {
   );
 }
 
-// ─── Middleware ────────────────────────────────────────────────────────────────
+// ─── Response helpers ─────────────────────────────────────────────────────────
 
-app.use((req, res, next) => {
-  res.setHeader("Content-Type", "application/json");
-  next();
-});
+function json(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
+}
 
-app.use('/images', express.static('images'));
+function notFound(msg = "Rota não encontrada. Acede a GET / para ver os endpoints disponíveis.") {
+  return json({ error: msg }, 404);
+}
 
-// ─── Root ─────────────────────────────────────────────────────────────────────
+// ─── Router ───────────────────────────────────────────────────────────────────
 
-app.get("/", (req, res) => {
+function route(pathname, method, handlers) {
+  for (const [pattern, handler] of handlers) {
+    const match = matchPath(pattern, pathname);
+    if (match !== null) return handler(match);
+  }
+  return notFound();
+}
+
+function matchPath(pattern, pathname) {
+  // Exact match
+  if (!pattern.includes(":")) {
+    return pattern === pathname ? {} : null;
+  }
+  // Parametric match
+  const patternParts  = pattern.split("/");
+  const pathnameParts = pathname.split("/");
+  if (patternParts.length !== pathnameParts.length) return null;
+  const params = {};
+  for (let i = 0; i < patternParts.length; i++) {
+    if (patternParts[i].startsWith(":")) {
+      params[patternParts[i].slice(1)] = decodeURIComponent(pathnameParts[i]);
+    } else if (patternParts[i] !== pathnameParts[i]) {
+      return null;
+    }
+  }
+  return params;
+}
+
+// ─── Handlers ─────────────────────────────────────────────────────────────────
+
+function handleRoot() {
   const types   = [...new Set(characters.map((c) => c.type))].sort();
   const animals = [...new Set(characters.map((c) => c.animal))].sort();
   const series  = [...new Set(books.map((b) => b.series))].sort();
 
-  res.json({
+  return json({
     name: "FNaF API",
     version: "2.0.0",
     total_characters: characters.length,
@@ -69,13 +99,13 @@ app.get("/", (req, res) => {
       "GET /search?q=":            "Busca textual em nome, tipo, animal e cor",
     },
     character_filters: {
-      type: "Filtrar por tipo (ex: ?type=Classic)",
-      animal: "Filtrar por animal (ex: ?animal=Bear)",
-      color: "Filtrar por cor (ex: ?color=Blue)",
+      type:     "Filtrar por tipo (ex: ?type=Classic)",
+      animal:   "Filtrar por animal (ex: ?animal=Bear)",
+      color:    "Filtrar por cor (ex: ?color=Blue)",
       eyeColor: "Filtrar por cor dos olhos (ex: ?eyeColor=Red)",
-      year: "Filtrar por ano (ex: ?year=1987)",
-      limit: "Limitar resultados (ex: ?limit=10)",
-      offset: "Paginação (ex: ?offset=20)",
+      year:     "Filtrar por ano (ex: ?year=1987)",
+      limit:    "Limitar resultados (ex: ?limit=10)",
+      offset:   "Paginação (ex: ?offset=20)",
     },
     book_endpoints: {
       "GET /books":                "Lista todos os livros (com filtros opcionais)",
@@ -88,162 +118,195 @@ app.get("/", (req, res) => {
     },
     book_filters: {
       series: "Filtrar por série (ex: ?series=Trilogy)",
-      year: "Filtrar por ano (ex: ?year=2019)",
-      limit: "Limitar resultados (ex: ?limit=5)",
+      year:   "Filtrar por ano (ex: ?year=2019)",
+      limit:  "Limitar resultados (ex: ?limit=5)",
       offset: "Paginação (ex: ?offset=10)",
     },
-    available_types: types,
+    available_types:   types,
     available_animals: animals,
-    available_series: series,
+    available_series:  series,
   });
-});
+}
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// CHARACTER ROUTES
-// ═══════════════════════════════════════════════════════════════════════════════
+// ── Characters ────────────────────────────────────────────────────────────────
 
-app.get("/characters", (req, res) => {
+function handleCharacters(searchParams) {
   let result = [...characters];
-  const { type, animal, color, eyeColor, year, limit, offset } = req.query;
-  if (type)     result = result.filter((c) => c.type.toLowerCase() === type.toLowerCase());
+  const type     = searchParams.get("type");
+  const animal   = searchParams.get("animal");
+  const color    = searchParams.get("color");
+  const eyeColor = searchParams.get("eyeColor");
+  const year     = searchParams.get("year");
+  const limit    = searchParams.get("limit");
+  const offset   = searchParams.get("offset");
+
+  if (type)     result = result.filter((c) => c.type.toLowerCase()   === type.toLowerCase());
   if (animal)   result = result.filter((c) => c.animal.toLowerCase() === animal.toLowerCase());
-  if (color)    result = result.filter((c) => c.color.some((col) => col.toLowerCase() === color.toLowerCase()));
-  if (eyeColor) result = result.filter((c) => c.eyeColor.some((ec) => ec.toLowerCase() === eyeColor.toLowerCase()));
-  if (year)     result = result.filter((c) => String(c.year) === String(year));
+  if (color)    result = result.filter((c) => c.color.some((col)     => col.toLowerCase() === color.toLowerCase()));
+  if (eyeColor) result = result.filter((c) => c.eyeColor.some((ec)  => ec.toLowerCase()  === eyeColor.toLowerCase()));
+  if (year)     result = result.filter((c) => String(c.year)         === String(year));
+
   const total = result.length;
-  const off = parseInt(offset) || 0;
-  const lim = parseInt(limit) || total;
+  const off   = parseInt(offset) || 0;
+  const lim   = parseInt(limit)  || total;
   result = result.slice(off, off + lim);
-  res.json({ total, count: result.length, offset: off, limit: lim, characters: result });
-});
+  return json({ total, count: result.length, offset: off, limit: lim, characters: result });
+}
 
-app.get("/characters/random", (req, res) => {
-  res.json(characters[Math.floor(Math.random() * characters.length)]);
-});
+function handleCharactersRandom() {
+  return json(characters[Math.floor(Math.random() * characters.length)]);
+}
 
-// Tem de vir ANTES de /characters/:id
-app.get("/characters/name/:name", (req, res) => {
-  const slug = req.params.name.toLowerCase();
+function handleCharacterByName({ name }) {
+  const slug = name.toLowerCase();
   const char = characters.find((c) => slugify(c.name) === slug);
-  if (!char) return res.status(404).json({ error: `Personagem "${req.params.name}" não encontrado` });
-  res.json(char);
-});
+  if (!char) return json({ error: `Personagem "${name}" não encontrado` }, 404);
+  return json(char);
+}
 
-app.get("/characters/:id", (req, res) => {
-  const id = parseInt(req.params.id);
-  if (isNaN(id)) return res.status(400).json({ error: "ID deve ser um número" });
-  const char = characters.find((c) => c.id === id);
-  if (!char) return res.status(404).json({ error: `Personagem com ID ${id} não encontrado` });
-  res.json(char);
-});
+function handleCharacterById({ id }) {
+  const numId = parseInt(id);
+  if (isNaN(numId)) return json({ error: "ID deve ser um número" }, 400);
+  const char = characters.find((c) => c.id === numId);
+  if (!char) return json({ error: `Personagem com ID ${numId} não encontrado` }, 404);
+  return json(char);
+}
 
-app.get("/types", (req, res) => {
+function handleTypes() {
   const types = [...new Set(characters.map((c) => c.type))].sort();
-  res.json({
+  return json({
     total: types.length,
     types: types.map((t) => ({ name: t, slug: slugify(t), count: characters.filter((c) => c.type === t).length })),
   });
-});
+}
 
-app.get("/types/:type", (req, res) => {
-  const type = req.params.type.toLowerCase();
-  const result = characters.filter((c) => slugify(c.type) === type || c.type.toLowerCase() === type);
-  if (result.length === 0) return res.status(404).json({ error: `Tipo "${req.params.type}" não encontrado` });
-  res.json({ type: result[0].type, total: result.length, characters: result });
-});
+function handleTypeBySlug({ type }) {
+  const slug   = type.toLowerCase();
+  const result = characters.filter((c) => slugify(c.type) === slug || c.type.toLowerCase() === slug);
+  if (result.length === 0) return json({ error: `Tipo "${type}" não encontrado` }, 404);
+  return json({ type: result[0].type, total: result.length, characters: result });
+}
 
-app.get("/animals", (req, res) => {
+function handleAnimals() {
   const animals = [...new Set(characters.map((c) => c.animal))].sort();
-  res.json({
+  return json({
     total: animals.length,
     animals: animals.map((a) => ({ name: a, slug: slugify(a), count: characters.filter((c) => c.animal === a).length })),
   });
-});
+}
 
-app.get("/animals/:animal", (req, res) => {
-  const animal = req.params.animal.toLowerCase();
-  const result = characters.filter((c) => slugify(c.animal) === animal || c.animal.toLowerCase() === animal);
-  if (result.length === 0) return res.status(404).json({ error: `Animal "${req.params.animal}" não encontrado` });
-  res.json({ animal: result[0].animal, total: result.length, characters: result });
-});
+function handleAnimalBySlug({ animal }) {
+  const slug   = animal.toLowerCase();
+  const result = characters.filter((c) => slugify(c.animal) === slug || c.animal.toLowerCase() === slug);
+  if (result.length === 0) return json({ error: `Animal "${animal}" não encontrado` }, 404);
+  return json({ animal: result[0].animal, total: result.length, characters: result });
+}
 
-app.get("/search", (req, res) => {
-  const q = req.query.q;
-  if (!q || q.trim() === "") return res.status(400).json({ error: "Parâmetro ?q= é obrigatório" });
+function handleSearch(searchParams) {
+  const q = searchParams.get("q");
+  if (!q || q.trim() === "") return json({ error: "Parâmetro ?q= é obrigatório" }, 400);
   const result = characters.filter((c) => matchesQuery(c, q.trim()));
-  res.json({ query: q, total: result.length, characters: result });
-});
+  return json({ query: q, total: result.length, characters: result });
+}
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// BOOK ROUTES
-// ═══════════════════════════════════════════════════════════════════════════════
+// ── Books ─────────────────────────────────────────────────────────────────────
 
-app.get("/books", (req, res) => {
+function handleBooks(searchParams) {
   let result = [...books];
-  const { series, year, limit, offset } = req.query;
+  const series = searchParams.get("series");
+  const year   = searchParams.get("year");
+  const limit  = searchParams.get("limit");
+  const offset = searchParams.get("offset");
+
   if (series) result = result.filter((b) => b.series.toLowerCase() === series.toLowerCase());
   if (year)   result = result.filter((b) => String(b.year) === String(year));
+
   const total = result.length;
-  const off = parseInt(offset) || 0;
-  const lim = parseInt(limit) || total;
+  const off   = parseInt(offset) || 0;
+  const lim   = parseInt(limit)  || total;
   result = result.slice(off, off + lim);
-  res.json({ total, count: result.length, offset: off, limit: lim, books: result });
-});
+  return json({ total, count: result.length, offset: off, limit: lim, books: result });
+}
 
-app.get("/books/random", (req, res) => {
-  res.json(books[Math.floor(Math.random() * books.length)]);
-});
+function handleBooksRandom() {
+  return json(books[Math.floor(Math.random() * books.length)]);
+}
 
-// Tem de vir ANTES de /books/:id e /books/series/:series
-app.get("/books/series", (req, res) => {
+function handleBookSeries() {
   const series = [...new Set(books.map((b) => b.series))].sort();
-  res.json({
+  return json({
     total: series.length,
     series: series.map((s) => ({ name: s, slug: slugify(s), count: books.filter((b) => b.series === s).length })),
   });
-});
+}
 
-app.get("/books/series/:series", (req, res) => {
-  const series = req.params.series.toLowerCase();
-  const result = books.filter((b) => slugify(b.series) === series || b.series.toLowerCase() === series);
-  if (result.length === 0) return res.status(404).json({ error: `Série "${req.params.series}" não encontrada` });
-  res.json({ series: result[0].series, total: result.length, books: result });
-});
+function handleBookSeriesBySlug({ series }) {
+  const slug   = series.toLowerCase();
+  const result = books.filter((b) => slugify(b.series) === slug || b.series.toLowerCase() === slug);
+  if (result.length === 0) return json({ error: `Série "${series}" não encontrada` }, 404);
+  return json({ series: result[0].series, total: result.length, books: result });
+}
 
-app.get("/books/title/:title", (req, res) => {
-  const slug = req.params.title.toLowerCase();
+function handleBookByTitle({ title }) {
+  const slug = title.toLowerCase();
   const book = books.find((b) => slugify(b.title) === slug);
-  if (!book) return res.status(404).json({ error: `Livro "${req.params.title}" não encontrado` });
-  res.json(book);
-});
+  if (!book) return json({ error: `Livro "${title}" não encontrado` }, 404);
+  return json(book);
+}
 
-app.get("/books/search", (req, res) => {
-  const q = req.query.q;
-  if (!q || q.trim() === "") return res.status(400).json({ error: "Parâmetro ?q= é obrigatório" });
+function handleBookSearch(searchParams) {
+  const q = searchParams.get("q");
+  if (!q || q.trim() === "") return json({ error: "Parâmetro ?q= é obrigatório" }, 400);
   const result = books.filter((b) => matchesBookQuery(b, q.trim()));
-  res.json({ query: q, total: result.length, books: result });
-});
+  return json({ query: q, total: result.length, books: result });
+}
 
-app.get("/books/:id", (req, res) => {
-  const id = parseInt(req.params.id);
-  if (isNaN(id)) return res.status(400).json({ error: "ID deve ser um número" });
-  const book = books.find((b) => b.id === id);
-  if (!book) return res.status(404).json({ error: `Livro com ID ${id} não encontrado` });
-  res.json(book);
-});
+function handleBookById({ id }) {
+  const numId = parseInt(id);
+  if (isNaN(numId)) return json({ error: "ID deve ser um número" }, 400);
+  const book = books.find((b) => b.id === numId);
+  if (!book) return json({ error: `Livro com ID ${numId} não encontrado` }, 404);
+  return json(book);
+}
 
-// ─── 404 ──────────────────────────────────────────────────────────────────────
+// ─── Main fetch handler ───────────────────────────────────────────────────────
 
-app.use((req, res) => {
-  res.status(404).json({ error: "Rota não encontrada. Acede a GET / para ver os endpoints disponíveis." });
-});
+export default {
+  fetch(request) {
+    const url      = new URL(request.url);
+    const pathname = url.pathname.replace(/\/$/, "") || "/";
+    const sp       = url.searchParams;
 
-// ─── Start ────────────────────────────────────────────────────────────────────
+    // Characters — ordem importa (rotas fixas antes das parametrizadas)
+    if (pathname === "/")                          return handleRoot();
+    if (pathname === "/characters")                return handleCharacters(sp);
+    if (pathname === "/characters/random")         return handleCharactersRandom();
+    if (pathname === "/search")                    return handleSearch(sp);
+    if (pathname === "/types")                     return handleTypes();
+    if (pathname === "/animals")                   return handleAnimals();
+    if (pathname === "/books")                     return handleBooks(sp);
+    if (pathname === "/books/random")              return handleBooksRandom();
+    if (pathname === "/books/series")              return handleBookSeries();
+    if (pathname === "/books/search")              return handleBookSearch(sp);
 
-app.listen(PORT, () => {
-  console.log(`🎮 FNaF API rodando em http://localhost:${PORT}`);
-  console.log(`👾 ${characters.length} personagens carregados`);
-  console.log(`📚 ${books.length} livros carregados`);
-});
+    // Books — parametrizadas
+    const bookTitle  = matchPath("/books/title/:title",   pathname);
+    if (bookTitle)   return handleBookByTitle(bookTitle);
+    const bookSeries = matchPath("/books/series/:series", pathname);
+    if (bookSeries)  return handleBookSeriesBySlug(bookSeries);
+    const bookId     = matchPath("/books/:id",            pathname);
+    if (bookId)      return handleBookById(bookId);
 
-module.exports = app;
+    // Characters — parametrizadas
+    const charName   = matchPath("/characters/name/:name", pathname);
+    if (charName)    return handleCharacterByName(charName);
+    const typeSlug   = matchPath("/types/:type",           pathname);
+    if (typeSlug)    return handleTypeBySlug(typeSlug);
+    const animalSlug = matchPath("/animals/:animal",       pathname);
+    if (animalSlug)  return handleAnimalBySlug(animalSlug);
+    const charId     = matchPath("/characters/:id",        pathname);
+    if (charId)      return handleCharacterById(charId);
+
+    return notFound();
+  },
+};

@@ -3142,4 +3142,4 @@ const CHARS = [
   },
 ];
 
-module.exports = { CHARS };
+export { CHARS };

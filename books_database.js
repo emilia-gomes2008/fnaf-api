@@ -366,4 +366,4 @@ const BOOKS = [
   },
 ];
 
-module.exports = { BOOKS };
+export { BOOKS };

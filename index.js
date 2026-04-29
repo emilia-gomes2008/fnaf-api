@@ -281,8 +281,14 @@ export default {
     const sp = url.searchParams;
 
     // Characters — ordem importa (rotas fixas antes das parametrizadas)
-    if (pathname === "/") return Response.redirect(`${url.origin}/docs`, 301);
-    if (pathname === "/docs") return Response.redirect("https://emilia-gomes2008.github.io/fnaf-api/docs/", 301);
+    if (pathname === "/") {
+      const accept = request.headers.get("Accept") || "";
+      if (accept.includes("text/html")) {
+        return Response.redirect("https://fnaf-api.pages.dev/", 301);
+      }
+      return handleRoot();
+    }
+    if (pathname === "/docs") return Response.redirect("https://fnaf-api.pages.dev/", 301);
     if (pathname === "/characters") return handleCharacters(sp);
     if (pathname === "/characters/random") return handleCharactersRandom();
     if (pathname === "/search") return handleSearch(sp);

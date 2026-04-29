@@ -281,23 +281,17 @@ export default {
     const sp = url.searchParams;
 
     // Characters — ordem importa (rotas fixas antes das parametrizadas)
-    if (pathname === "/") {
-      const accept = request.headers.get("Accept") || "";
-      if (accept.includes("text/html")) {
-        return Response.redirect("https://fnaf-api.pages.dev/", 301);
-      }
-      return handleRoot();
-    }
-    if (pathname === "/docs") return Response.redirect("https://fnaf-api.pages.dev/", 301);
-    if (pathname === "/characters") return handleCharacters(sp);
-    if (pathname === "/characters/random") return handleCharactersRandom();
-    if (pathname === "/search") return handleSearch(sp);
-    if (pathname === "/types") return handleTypes();
-    if (pathname === "/animals") return handleAnimals();
-    if (pathname === "/books") return handleBooks(sp);
-    if (pathname === "/books/random") return handleBooksRandom();
-    if (pathname === "/books/series") return handleBookSeries();
-    if (pathname === "/books/search") return handleBookSearch(sp);
+    if (pathname === "/")                          return handleRoot();
+    if (pathname === "/docs")                      return Response.redirect("https://fnaf-api.pages.dev/", 301);
+    if (pathname === "/characters")                return handleCharacters(sp);
+    if (pathname === "/characters/random")         return handleCharactersRandom();
+    if (pathname === "/search")                    return handleSearch(sp);
+    if (pathname === "/types")                     return handleTypes();
+    if (pathname === "/animals")                   return handleAnimals();
+    if (pathname === "/books")                     return handleBooks(sp);
+    if (pathname === "/books/random")              return handleBooksRandom();
+    if (pathname === "/books/series")              return handleBookSeries();
+    if (pathname === "/books/search")              return handleBookSearch(sp);
 
     // ── Imagens (redirect para GitHub raw) ───────────────────────────────────
     if (pathname.startsWith("/images/")) {
@@ -322,7 +316,6 @@ export default {
     if (animalSlug) return handleAnimalBySlug(animalSlug);
     const charId = matchPath("/characters/:id", pathname);
     if (charId) return handleCharacterById(charId);
-
     return notFound();
   },
 };

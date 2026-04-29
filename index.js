@@ -32,6 +32,11 @@ function matchesBookQuery(book, query) {
   );
 }
 
+if (pathname.startsWith("/images/")) {
+  const githubBase = "https://raw.githubusercontent.com/emilia-gomes2008/fnaf-api/main";
+  return Response.redirect(`${githubBase}${pathname}`, 302);
+}
+
 // ─── Response helpers ─────────────────────────────────────────────────────────
 
 function json(data, status = 200) {

@@ -32,11 +32,6 @@ function matchesBookQuery(book, query) {
   );
 }
 
-if (pathname.startsWith("/images/")) {
-  const githubBase = "https://raw.githubusercontent.com/emilia-gomes2008/fnaf-api/main";
-  return Response.redirect(`${githubBase}${pathname}`, 302);
-}
-
 // ─── Response helpers ─────────────────────────────────────────────────────────
 
 function json(data, status = 200) {
@@ -126,6 +121,9 @@ function handleRoot() {
       year:   "Filtrar por ano (ex: ?year=2019)",
       limit:  "Limitar resultados (ex: ?limit=5)",
       offset: "Paginação (ex: ?offset=10)",
+    },
+    image_endpoints: {
+      "GET /images/:category/:type/:filename": "Retorna uma imagem (ex: /images/chars/classic/freddy.png)",
     },
     available_types:   types,
     available_animals: animals,
@@ -293,6 +291,12 @@ export default {
     if (pathname === "/books/random")              return handleBooksRandom();
     if (pathname === "/books/series")              return handleBookSeries();
     if (pathname === "/books/search")              return handleBookSearch(sp);
+
+    // ── Imagens (redirect para GitHub raw) ───────────────────────────────────
+    if (pathname.startsWith("/images/")) {
+      const githubBase = "https://raw.githubusercontent.com/emilia-gomes2008/fnaf-api/main";
+      return Response.redirect(`${githubBase}${pathname}`, 302);
+    }
 
     // Books — parametrizadas
     const bookTitle  = matchPath("/books/title/:title",   pathname);

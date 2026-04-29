@@ -4,7 +4,7 @@ import { BOOKS } from "./books_database.js";
 // ─── Data setup ───────────────────────────────────────────────────────────────
 
 const characters = CHARS.map((char, index) => ({ id: index + 1, ...char }));
-const books      = BOOKS.map((book, index) => ({ id: index + 1, ...book }));
+const books = BOOKS.map((book, index) => ({ id: index + 1, ...book }));
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -61,7 +61,7 @@ function matchPath(pattern, pathname) {
     return pattern === pathname ? {} : null;
   }
   // Parametric match
-  const patternParts  = pattern.split("/");
+  const patternParts = pattern.split("/");
   const pathnameParts = pathname.split("/");
   if (patternParts.length !== pathnameParts.length) return null;
   const params = {};
@@ -78,9 +78,9 @@ function matchPath(pattern, pathname) {
 // ─── Handlers ─────────────────────────────────────────────────────────────────
 
 function handleRoot() {
-  const types   = [...new Set(characters.map((c) => c.type))].sort();
+  const types = [...new Set(characters.map((c) => c.type))].sort();
   const animals = [...new Set(characters.map((c) => c.animal))].sort();
-  const series  = [...new Set(books.map((b) => b.series))].sort();
+  const series = [...new Set(books.map((b) => b.series))].sort();
 
   return json({
     name: "FNaF API",
@@ -88,46 +88,46 @@ function handleRoot() {
     total_characters: characters.length,
     total_books: books.length,
     character_endpoints: {
-      "GET /characters":            "Lista todos os personagens (com filtros opcionais)",
-      "GET /characters/random":     "Retorna um personagem aleatório",
-      "GET /characters/:id":        "Busca personagem por ID numérico",
+      "GET /characters": "Lista todos os personagens (com filtros opcionais)",
+      "GET /characters/random": "Retorna um personagem aleatório",
+      "GET /characters/:id": "Busca personagem por ID numérico",
       "GET /characters/name/:name": "Busca personagem pelo nome (slug)",
-      "GET /types":                 "Lista todos os tipos disponíveis",
-      "GET /types/:type":           "Lista personagens de um tipo específico",
-      "GET /animals":               "Lista todos os animais disponíveis",
-      "GET /animals/:animal":       "Lista personagens de um animal específico",
-      "GET /search?q=":            "Busca textual em nome, tipo, animal e cor",
+      "GET /types": "Lista todos os tipos disponíveis",
+      "GET /types/:type": "Lista personagens de um tipo específico",
+      "GET /animals": "Lista todos os animais disponíveis",
+      "GET /animals/:animal": "Lista personagens de um animal específico",
+      "GET /search?q=": "Busca textual em nome, tipo, animal e cor",
     },
     character_filters: {
-      type:     "Filtrar por tipo (ex: ?type=Classic)",
-      animal:   "Filtrar por animal (ex: ?animal=Bear)",
-      color:    "Filtrar por cor (ex: ?color=Blue)",
+      type: "Filtrar por tipo (ex: ?type=Classic)",
+      animal: "Filtrar por animal (ex: ?animal=Bear)",
+      color: "Filtrar por cor (ex: ?color=Blue)",
       eyeColor: "Filtrar por cor dos olhos (ex: ?eyeColor=Red)",
-      year:     "Filtrar por ano (ex: ?year=1987)",
-      limit:    "Limitar resultados (ex: ?limit=10)",
-      offset:   "Paginação (ex: ?offset=20)",
+      year: "Filtrar por ano (ex: ?year=1987)",
+      limit: "Limitar resultados (ex: ?limit=10)",
+      offset: "Paginação (ex: ?offset=20)",
     },
     book_endpoints: {
-      "GET /books":                "Lista todos os livros (com filtros opcionais)",
-      "GET /books/random":         "Retorna um livro aleatório",
-      "GET /books/:id":            "Busca livro por ID numérico",
-      "GET /books/title/:title":   "Busca livro pelo título (slug)",
-      "GET /books/series":         "Lista todas as séries disponíveis",
+      "GET /books": "Lista todos os livros (com filtros opcionais)",
+      "GET /books/random": "Retorna um livro aleatório",
+      "GET /books/:id": "Busca livro por ID numérico",
+      "GET /books/title/:title": "Busca livro pelo título (slug)",
+      "GET /books/series": "Lista todas as séries disponíveis",
       "GET /books/series/:series": "Lista livros de uma série específica",
-      "GET /books/search?q=":     "Busca textual em título, série e ano",
+      "GET /books/search?q=": "Busca textual em título, série e ano",
     },
     book_filters: {
       series: "Filtrar por série (ex: ?series=Trilogy)",
-      year:   "Filtrar por ano (ex: ?year=2019)",
-      limit:  "Limitar resultados (ex: ?limit=5)",
+      year: "Filtrar por ano (ex: ?year=2019)",
+      limit: "Limitar resultados (ex: ?limit=5)",
       offset: "Paginação (ex: ?offset=10)",
     },
     image_endpoints: {
       "GET /images/:category/:type/:filename": "Retorna uma imagem (ex: /images/chars/classic/freddy.png)",
     },
-    available_types:   types,
+    available_types: types,
     available_animals: animals,
-    available_series:  series,
+    available_series: series,
   });
 }
 
@@ -135,23 +135,23 @@ function handleRoot() {
 
 function handleCharacters(searchParams) {
   let result = [...characters];
-  const type     = searchParams.get("type");
-  const animal   = searchParams.get("animal");
-  const color    = searchParams.get("color");
+  const type = searchParams.get("type");
+  const animal = searchParams.get("animal");
+  const color = searchParams.get("color");
   const eyeColor = searchParams.get("eyeColor");
-  const year     = searchParams.get("year");
-  const limit    = searchParams.get("limit");
-  const offset   = searchParams.get("offset");
+  const year = searchParams.get("year");
+  const limit = searchParams.get("limit");
+  const offset = searchParams.get("offset");
 
-  if (type)     result = result.filter((c) => c.type.toLowerCase()   === type.toLowerCase());
-  if (animal)   result = result.filter((c) => c.animal.toLowerCase() === animal.toLowerCase());
-  if (color)    result = result.filter((c) => c.color.some((col)     => col.toLowerCase() === color.toLowerCase()));
-  if (eyeColor) result = result.filter((c) => c.eyeColor.some((ec)  => ec.toLowerCase()  === eyeColor.toLowerCase()));
-  if (year)     result = result.filter((c) => String(c.year)         === String(year));
+  if (type) result = result.filter((c) => c.type.toLowerCase() === type.toLowerCase());
+  if (animal) result = result.filter((c) => c.animal.toLowerCase() === animal.toLowerCase());
+  if (color) result = result.filter((c) => c.color.some((col) => col.toLowerCase() === color.toLowerCase()));
+  if (eyeColor) result = result.filter((c) => c.eyeColor.some((ec) => ec.toLowerCase() === eyeColor.toLowerCase()));
+  if (year) result = result.filter((c) => String(c.year) === String(year));
 
   const total = result.length;
-  const off   = parseInt(offset) || 0;
-  const lim   = parseInt(limit)  || total;
+  const off = parseInt(offset) || 0;
+  const lim = parseInt(limit) || total;
   result = result.slice(off, off + lim);
   return json({ total, count: result.length, offset: off, limit: lim, characters: result });
 }
@@ -184,7 +184,7 @@ function handleTypes() {
 }
 
 function handleTypeBySlug({ type }) {
-  const slug   = type.toLowerCase();
+  const slug = type.toLowerCase();
   const result = characters.filter((c) => slugify(c.type) === slug || c.type.toLowerCase() === slug);
   if (result.length === 0) return json({ error: `Tipo "${type}" não encontrado` }, 404);
   return json({ type: result[0].type, total: result.length, characters: result });
@@ -199,7 +199,7 @@ function handleAnimals() {
 }
 
 function handleAnimalBySlug({ animal }) {
-  const slug   = animal.toLowerCase();
+  const slug = animal.toLowerCase();
   const result = characters.filter((c) => slugify(c.animal) === slug || c.animal.toLowerCase() === slug);
   if (result.length === 0) return json({ error: `Animal "${animal}" não encontrado` }, 404);
   return json({ animal: result[0].animal, total: result.length, characters: result });
@@ -217,16 +217,16 @@ function handleSearch(searchParams) {
 function handleBooks(searchParams) {
   let result = [...books];
   const series = searchParams.get("series");
-  const year   = searchParams.get("year");
-  const limit  = searchParams.get("limit");
+  const year = searchParams.get("year");
+  const limit = searchParams.get("limit");
   const offset = searchParams.get("offset");
 
   if (series) result = result.filter((b) => b.series.toLowerCase() === series.toLowerCase());
-  if (year)   result = result.filter((b) => String(b.year) === String(year));
+  if (year) result = result.filter((b) => String(b.year) === String(year));
 
   const total = result.length;
-  const off   = parseInt(offset) || 0;
-  const lim   = parseInt(limit)  || total;
+  const off = parseInt(offset) || 0;
+  const lim = parseInt(limit) || total;
   result = result.slice(off, off + lim);
   return json({ total, count: result.length, offset: off, limit: lim, books: result });
 }
@@ -244,7 +244,7 @@ function handleBookSeries() {
 }
 
 function handleBookSeriesBySlug({ series }) {
-  const slug   = series.toLowerCase();
+  const slug = series.toLowerCase();
   const result = books.filter((b) => slugify(b.series) === slug || b.series.toLowerCase() === slug);
   if (result.length === 0) return json({ error: `Série "${series}" não encontrada` }, 404);
   return json({ series: result[0].series, total: result.length, books: result });
@@ -276,21 +276,22 @@ function handleBookById({ id }) {
 
 export default {
   fetch(request) {
-    const url      = new URL(request.url);
+    const url = new URL(request.url);
     const pathname = url.pathname.replace(/\/$/, "") || "/";
-    const sp       = url.searchParams;
+    const sp = url.searchParams;
 
     // Characters — ordem importa (rotas fixas antes das parametrizadas)
-    if (pathname === "/")                          return handleRoot();
-    if (pathname === "/characters")                return handleCharacters(sp);
-    if (pathname === "/characters/random")         return handleCharactersRandom();
-    if (pathname === "/search")                    return handleSearch(sp);
-    if (pathname === "/types")                     return handleTypes();
-    if (pathname === "/animals")                   return handleAnimals();
-    if (pathname === "/books")                     return handleBooks(sp);
-    if (pathname === "/books/random")              return handleBooksRandom();
-    if (pathname === "/books/series")              return handleBookSeries();
-    if (pathname === "/books/search")              return handleBookSearch(sp);
+    if (pathname === "/") return Response.redirect(`${url.origin}/docs`, 301);
+    if (pathname === "/docs") return Response.redirect("https://fnaf-api.pages.dev", 301);
+    if (pathname === "/characters") return handleCharacters(sp);
+    if (pathname === "/characters/random") return handleCharactersRandom();
+    if (pathname === "/search") return handleSearch(sp);
+    if (pathname === "/types") return handleTypes();
+    if (pathname === "/animals") return handleAnimals();
+    if (pathname === "/books") return handleBooks(sp);
+    if (pathname === "/books/random") return handleBooksRandom();
+    if (pathname === "/books/series") return handleBookSeries();
+    if (pathname === "/books/search") return handleBookSearch(sp);
 
     // ── Imagens (redirect para GitHub raw) ───────────────────────────────────
     if (pathname.startsWith("/images/")) {
@@ -299,22 +300,22 @@ export default {
     }
 
     // Books — parametrizadas
-    const bookTitle  = matchPath("/books/title/:title",   pathname);
-    if (bookTitle)   return handleBookByTitle(bookTitle);
+    const bookTitle = matchPath("/books/title/:title", pathname);
+    if (bookTitle) return handleBookByTitle(bookTitle);
     const bookSeries = matchPath("/books/series/:series", pathname);
-    if (bookSeries)  return handleBookSeriesBySlug(bookSeries);
-    const bookId     = matchPath("/books/:id",            pathname);
-    if (bookId)      return handleBookById(bookId);
+    if (bookSeries) return handleBookSeriesBySlug(bookSeries);
+    const bookId = matchPath("/books/:id", pathname);
+    if (bookId) return handleBookById(bookId);
 
     // Characters — parametrizadas
-    const charName   = matchPath("/characters/name/:name", pathname);
-    if (charName)    return handleCharacterByName(charName);
-    const typeSlug   = matchPath("/types/:type",           pathname);
-    if (typeSlug)    return handleTypeBySlug(typeSlug);
-    const animalSlug = matchPath("/animals/:animal",       pathname);
-    if (animalSlug)  return handleAnimalBySlug(animalSlug);
-    const charId     = matchPath("/characters/:id",        pathname);
-    if (charId)      return handleCharacterById(charId);
+    const charName = matchPath("/characters/name/:name", pathname);
+    if (charName) return handleCharacterByName(charName);
+    const typeSlug = matchPath("/types/:type", pathname);
+    if (typeSlug) return handleTypeBySlug(typeSlug);
+    const animalSlug = matchPath("/animals/:animal", pathname);
+    if (animalSlug) return handleAnimalBySlug(animalSlug);
+    const charId = matchPath("/characters/:id", pathname);
+    if (charId) return handleCharacterById(charId);
 
     return notFound();
   },

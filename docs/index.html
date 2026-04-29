@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FNaF API — Docs</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── Sidebar ─────────────────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">FNaF API</div>
+      <div class="sidebar-title">Documentation</div>
+      <div class="sidebar-version">v2.0.0 · Cloudflare Workers</div>
+    </div>
+    <div class="sidebar-stats">
+      <div class="stat-chip">
+        <span>335</span>
+        <span>Characters</span>
+      </div>
+      <div class="stat-sep">·</div>
+      <div class="stat-chip">
+        <span>48</span>
+        <span>Books</span>
+      </div>
+    </div>
+    <nav>
+      <div class="nav-group">
+        <div class="nav-group-label">Overview</div>
+        <a href="#overview"      class="nav-link active"><span class="nav-method">GET</span> Root</a>
+        <a href="#base-url"      class="nav-link">Base URL</a>
+        <a href="#errors"        class="nav-link">Error Handling</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">Characters</div>
+        <a href="#chars-list"    class="nav-link"><span class="nav-method">GET</span> List</a>
+        <a href="#chars-random"  class="nav-link"><span class="nav-method">GET</span> Random</a>
+        <a href="#chars-id"      class="nav-link"><span class="nav-method">GET</span> By ID</a>
+        <a href="#chars-name"    class="nav-link"><span class="nav-method">GET</span> By Name</a>
+        <a href="#chars-search"  class="nav-link"><span class="nav-method">GET</span> Search</a>
+        <a href="#chars-types"   class="nav-link"><span class="nav-method">GET</span> Types</a>
+        <a href="#chars-animals" class="nav-link"><span class="nav-method">GET</span> Animals</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">Books</div>
+        <a href="#books-list"    class="nav-link"><span class="nav-method">GET</span> List</a>
+        <a href="#books-random"  class="nav-link"><span class="nav-method">GET</span> Random</a>
+        <a href="#books-id"      class="nav-link"><span class="nav-method">GET</span> By ID</a>
+        <a href="#books-title"   class="nav-link"><span class="nav-method">GET</span> By Title</a>
+        <a href="#books-search"  class="nav-link"><span class="nav-method">GET</span> Search</a>
+        <a href="#books-series"  class="nav-link"><span class="nav-method">GET</span> Series</a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">Images</div>
+        <a href="#images" class="nav-link"><span class="nav-method">GET</span> Images</a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ── Main ────────────────────────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- Hero -->
+    <div class="hero" id="overview">
+      <div class="hero-badge">LIVE</div>
+      <h1>FNaF <span>API</span> Docs</h1>
+      <p class="hero-sub">
+        A REST API for Five Nights at Freddy's data — 335 characters and 48 books, fully filterable and searchable. Built on Cloudflare Workers.
+      </p>
+      <div class="hero-meta">
+        <div class="meta-item"><span class="dot"></span>No auth required</div>
+        <div class="meta-item"><span class="dot"></span>JSON responses</div>
+        <div class="meta-item"><span class="dot"></span>GET only</div>
+        <div class="meta-item"><span class="dot"></span>CORS enabled</div>
+      </div>
+    </div>
+
+    <!-- Base URL & conventions -->
+    <div class="section" id="base-url">
+      <div class="section-header">
+        <div>
+          <h2>Base URL & Conventions</h2>
+          <p class="section-sub">How the API is structured</p>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-card-label">Base URL</div>
+          <div class="info-card-value" style="font-family:'Share Tech Mono',monospace; color: var(--accent3); font-size: 13px;">https://fnaf-api.gsarvente.workers.dev</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Format</div>
+          <div class="info-card-value">All responses are <code style="font-family:'Share Tech Mono',monospace;color:var(--accent3)">application/json</code>. Trailing slashes are stripped automatically.</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Slug convention</div>
+          <div class="info-card-value">Name/title URL params are <strong>slugified</strong>: lowercased, spaces -> <code style="font-family:'Share Tech Mono',monospace;color:var(--param)">-</code>, special chars removed.<br>e.g. <code style="font-family:'Share Tech Mono',monospace;color:var(--param)">Freddy Fazbear</code> -> <code style="font-family:'Share Tech Mono',monospace;color:var(--param)">freddy-fazbear</code></div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Pagination</div>
+          <div class="info-card-value">All list endpoints support <code style="font-family:'Share Tech Mono',monospace;color:var(--accent3)">?limit=</code> and <code style="font-family:'Share Tech Mono',monospace;color:var(--accent3)">?offset=</code> for cursor-style pagination.</div>
+        </div>
+      </div>
+
+      <div class="alert info">
+        <span class="icon">ℹ</span>
+        <span>All endpoints are read-only (<strong>GET</strong>). No API key is required. The root endpoint <code style="font-family:'Share Tech Mono',monospace">GET /</code> returns a live summary of all available routes and values.</span>
+      </div>
+    </div>
+
+    <!-- Errors -->
+    <div class="section" id="errors">
+      <div class="section-header">
+        <div class="section-icon info" style="background:rgba(255,60,60,0.1)">⚠</div>
+        <div>
+          <h2>Error Handling</h2>
+          <p class="section-sub">How errors are returned</p>
+        </div>
+      </div>
+
+      <table class="params-table">
+        <thead><tr><th>Status</th><th>Meaning</th><th>Example body</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--accent3)">200</span></td>
+            <td>Success</td>
+            <td style="font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--muted)">{ ... data ... }</td>
+          </tr>
+          <tr>
+            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--accent2)">400</span></td>
+            <td>Bad request (e.g. non-numeric ID, missing <code style="font-family:'Share Tech Mono',monospace">?q=</code>)</td>
+            <td style="font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--muted)">{ "error": "ID deve ser um número" }</td>
+          </tr>
+          <tr>
+            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--accent)">404</span></td>
+            <td>Not found (unknown route or resource)</td>
+            <td style="font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--muted)">{ "error": "Personagem \"...\" não encontrado" }</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── CHARACTERS ──────────────────────────────────────────────── -->
+    <div class="section">
+      <div class="section-header">
+        <div>
+          <h2>Characters</h2>
+          <p class="section-sub">335 animatronics, with 25 types and 55 animal categories</p>
+        </div>
+      </div>
+
+      <!-- Character schema -->
+      <div style="margin-bottom: 22px;">
+        <div class="params-title">Character object</div>
+        <div class="schema">
+          <div class="schema-field"><span class="key">id</span><span class="type">number</span></div>
+          <div class="schema-field"><span class="key">name</span><span class="type">string</span></div>
+          <div class="schema-field"><span class="key">animal</span><span class="type">string</span></div>
+          <div class="schema-field"><span class="key">type</span><span class="type">string</span></div>
+          <div class="schema-field"><span class="key">color</span><span class="type">string[]</span></div>
+          <div class="schema-field"><span class="key">eyeColor</span><span class="type">string[]</span></div>
+          <div class="schema-field"><span class="key">year</span><span class="type">number|"Unknown"</span></div>
+          <div class="schema-field"><span class="key">img</span><span class="type">string</span></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <div class="params-title">Available types</div>
+        <div class="tag-list">
+          <span class="tag accent">Classic</span><span class="tag">Withered</span><span class="tag">Toy</span>
+          <span class="tag">Shadow</span><span class="tag">Nightmare</span><span class="tag">Funtime</span>
+          <span class="tag">Glamrock</span><span class="tag">Rockstar</span><span class="tag">Phantom</span>
+          <span class="tag">Springlock</span><span class="tag">Ruined</span><span class="tag">S.T.A.F.F. Bot</span>
+          <span class="tag">Endo</span><span class="tag">Plush</span><span class="tag">Mascot Suit</span>
+          <span class="tag">Jack-O</span><span class="tag">Trash</span><span class="tag">Other</span>
+          <span class="tag">+ more</span>
+        </div>
+      </div>
+
+      <hr class="sep">
+
+      <!-- GET /characters -->
+      <div class="endpoint" id="chars-list">
+        <div class="endpoint-head" onclick="toggle(this)">
+          <span class="method-badge">GET</span>
+          <div>
+            <div class="endpoint-path">/characters</div>
+            <div class="endpoint-desc">List all characters — filterable and paginated</div>
+          </div>
+          <span class="endpoint-toggle">▾</span>
+        </div>
+        <div class="endpoint-body">
+          <div class="params-title">Query parameters</div>
+          <table class="params-table">
+            <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span class="param-name">type</span><span class="badge-optional">optional</span></td><td><span class="param-type">string</span></td><td>Filter by type (e.g. <code style="font-family:'Share Tech Mono',monospace;color:var(--accent3)">Classic</code>)</td></tr>
+              <tr><td><span class="param-name">animal</span><span class="badge-optional">optional</span></td><td><span class="param-type">string</span></td><td>Filter by animal (e.g. <code style="font-family:'Share Tech Mono',monospace;color:var(--accent3)">Bear</code>)</td></tr>
+              <tr><td><span class="param-name">color</span><span class="badge-optional">optional</span></td><td><span class="param-type">string</span></td><td>Filter by body color (e.g. <code style="font-family:'Share Tech Mono',monospace;color:var(--accent3)">Purple</code>)</td></tr>
+              <tr><td><span class="param-name">eyeColor</span><span class="badge-optional">optional</span></td><td><span class="param-type">string</span></td><td>Filter by eye color</td></tr>
+              <tr><td><span class="param-name">year</span><span class="badge-optional">optional</span></td><td><span class="param-type">number</span></td><td>Filter by origin year (e.g. <code style="font-family:'Share Tech Mono',monospace;color:var(--accent3)">1987</code>)</td></tr>
+              <tr><td><span class="param-name">limit</span><span class="badge-optional">optional</span></td><td><span class="param-type">number</span></td><td>Max results to return</td></tr>
+              <tr><td><span class="param-name">offset</span><span class="badge-optional">optional</span></td><td><span class="param-type">number</span></td><td>Results to skip (for pagination)</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block-header">
+            <span class="code-label">Response</span>
+            <button class="copy-btn" onclick="copyCode(this, 'GET /characters?type=Toy&limit=2')">copy url</button>
+          </div>
+          <div class="code-block">
+<span class="json-brace">{</span>
+  <span class="json-key">"total"</span>: <span class="json-num">335</span>,
+  <span class="json-key">"count"</span>: <span class="json-num">2</span>,
+  <span class="json-key">"offset"</span>: <span class="json-num">0</span>,
+  <span class="json-key">"limit"</span>: <span class="json-num">2</span>,
+  <span class="json-key">"characters"</span>: <span class="json-brace">[</span>
+    <span class="json-brace">{</span>
+      <span class="json-key">"id"</span>: <span class="json-num">1</span>,
+      <span class="json-key">"name"</span>: <span class="json-str">"Freddy Fazbear"</span>,
+      <span class="json-key">"animal"</span>: <span class="json-str">"Bear"</span>,
+      <span class="json-key">"type"</span>: <span class="json-str">"Classic"</span>,
+      <span class="json-key">"color"</span>: <span class="json-brace">[</span><span class="json-str">"Brown"</span><span class="json-brace">]</span>,
+      <span class="json-key">"eyeColor"</span>: <span class="json-brace">[</span><span class="json-str">"Blue"</span><span class="json-brace">]</span>,
+      <span class="json-key">"year"</span>: <span class="json-num">1993</span>,
+      <span class="json-key">"img"</span>: <span class="json-str">"images/chars/classic/freddy.png"</span>
+    <span class="json-brace">}</span>, <span class="json-null">...</span>
+  <span class="json-brace">]</span>
+<span class="json-brace">}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GET /characters/random -->
+      <div class="endpoint" id="chars-random">
+        <div class="endpoint-head" onclick="toggle(this)">
+          <span class="method-badge">GET</span>
+          <div>
+            <div class="endpoint-path">/characters/random</div>
+            <div class="endpoint-desc">Returns a single random character</div>
+          </div>
+          <span class="endpoint-toggle">▾</span>
+        </div>
+        <div class="endpoint-body">
+          <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">No parameters. Returns a single character object chosen at random from all 335.</p>
+          <div class="code-block-header"><span class="code-label">Response</span></div>
+          <div class="code-block">
+<span class="json-brace">{</span>
+  <span class="json-key">"id"</span>: <span class="json-num">42</span>,
+  <span class="json-key">"name"</span>: <span class="json-str">"Nightmare Bonnie"</span>,
+  <span class="json-key">"animal"</span>: <span class="json-str">"Rabbit"</span>,
+  <span class="json-key">"type"</span>: <span class="json-str">"Nightmare"</span>,
+  <span class="json-key">"color"</span>: <span class="json-brace">[</span><span class="json-str">"Dark Blue"</span><span class="json-brace">]</span>,
+  <span class="json-key">"eyeColor"</span>: <span class="json-brace">[</span><span class="json-str">"Red"</span><span class="json-brace">]</span>,
+  <span class="json-key">"year"</span>: <span class="json-num">2015</span>,
+  <span class="json-key">"img"</span>: <span class="json-str">"images/chars/nightmare/nightmare_bonnie.png"</span>
+<span class="json-brace">}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GET /characters/:id -->
+      <div class="endpoint" id="chars-id">
+        <div class="endpoint-head" onclick="toggle(this)">
+          <span class="method-badge">GET</span>
+          <div>
+            <div class="endpoint-path">/characters/<span class="param">:id</span></div>
+            <div class="endpoint-desc">Fetch a character by numeric ID</div>
+          </div>
+          <span class="endpoint-toggle">▾</span>
+        </div>
+        <div class="endpoint-body">
+          <table class="params-table">
+            <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span class="param-name">id</span><span class="badge-required">required</span></td><td><span class="param-type">number</span></td><td>Numeric character ID (1-based, sequential)</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block"><span class="json-brace">{</span> <span class="json-null">/* single character object */</span> <span class="json-brace">}</span></div>
+        </div>
+      </div>
+
+      <!-- GET /characters/name/:name -->
+      <div class="endpoint" id="chars-name">
+        <div class="endpoint-head" onclick="toggle(this)">
+          <span class="method-badge">GET</span>
+          <div>
+            <div class="endpoint-path">/characters/name/<span class="param">:name</span></div>
+            <div class="endpoint-desc">Fetch a character by slugified name</div>
+          </div>
+          <span class="endpoint-toggle">▾</span>
+        </div>
+        <div class="endpoint-body">
+          <table class="params-table">
+            <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span class="param-name">name</span><span class="badge-required">required</span></td><td><span class="param-type">string</span></td><td>Slugified name (e.g. <code style="font-family:'Share Tech Mono',monospace;color:var(--accent3)">freddy-fazbear</code>)</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block">GET /characters/name/golden-freddy</div>
+        </div>
+      </div>
+
+      <!-- GET /search -->
+      <div class="endpoint" id="chars-search">
+        <div class="endpoint-head" onclick="toggle(this)">
+          <span class="method-badge">GET</span>
+          <div>
+            <div class="endpoint-path">/search<span class="qparam">?q=</span></div>
+            <div class="endpoint-desc">Full-text search across name, type, animal, color and eyeColor</div>
+          </div>
+          <span class="endpoint-toggle">▾</span>
+        </div>
+        <div class="endpoint-body">
+          <table class="params-table">
+            <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span class="param-name">q</span><span class="badge-required">required</span></td><td><span class="param-type">string</span></td><td>Search query (case-insensitive, partial match)</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block-header"><span class="code-label">Response</span></div>
+          <div class="code-block">
+<span class="json-brace">{</span>
+  <span class="json-key">"query"</span>: <span class="json-str">"purple"</span>,
+  <span class="json-key">"total"</span>: <span class="json-num">5</span>,
+  <span class="json-key">"characters"</span>: <span class="json-brace">[</span> <span class="json-null">/* ... */</span> <span class="json-brace">]</span>
+<span class="json-brace">}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GET /types -->
+      <div class="endpoint" id="chars-types">
+        <div class="endpoint-head" onclick="toggle(this)">
+          <span class="method-badge">GET</span>
+          <div>
+            <div class="endpoint-path">/types &nbsp;&amp;&nbsp; /types/<span class="param">:type</span></div>
+            <div class="endpoint-desc">List all types, or get characters of a specific type</div>
+          </div>
+          <span class="endpoint-toggle">▾</span>
+        </div>
+        <div class="endpoint-body">
+          <p style="font-size:13px;color:var(--muted);margin-bottom:14px;"><code style="font-family:'Share Tech Mono',monospace">GET /types</code> returns all types with their slug and character count.<br><code style="font-family:'Share Tech Mono',monospace">GET /types/nightmare</code> returns all characters of that type.</p>
+          <div class="code-block">
+<span class="json-brace">{</span>
+  <span class="json-key">"total"</span>: <span class="json-num">25</span>,
+  <span class="json-key">"types"</span>: <span class="json-brace">[</span>
+    <span class="json-brace">{</span> <span class="json-key">"name"</span>: <span class="json-str">"Classic"</span>, <span class="json-key">"slug"</span>: <span class="json-str">"classic"</span>, <span class="json-key">"count"</span>: <span class="json-num">14</span> <span class="json-brace">}</span>,
+    <span class="json-null">...</span>
+  <span class="json-brace">]</span>
+<span class="json-brace">}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GET /animals -->
+      <div class="endpoint" id="chars-animals">
+        <div class="endpoint-head" onclick="toggle(this)">
+          <span class="method-badge">GET</span>
+          <div>
+            <div class="endpoint-path">/animals &nbsp;&amp;&nbsp; /animals/<span class="param">:animal</span></div>
+            <div class="endpoint-desc">List all animals, or get characters of a specific animal</div>
+          </div>
+          <span class="endpoint-toggle">▾</span>
+        </div>
+        <div class="endpoint-body">
+          <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Identical structure to <code style="font-family:'Share Tech Mono',monospace">/types</code>. 55 animal categories total, including Bear, Fox, Rabbit, and more exotic ones like Blob, Rainbow, or Slime.</p>
+          <div class="code-block">GET /animals/fox -> returns all fox-type characters</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BOOKS ───────────────────────────────────────────────────── -->
+    <div class="section">
+      <div class="section-header">
+        <div>
+          <h2>Books</h2>
+          <p class="section-sub">48 titles across 10 series</p>
+        </div>
+      </div>
+
+      <!-- Book schema -->
+      <div style="margin-bottom: 22px;">
+        <div class="params-title">Book object</div>
+        <div class="schema">
+          <div class="schema-field"><span class="key">id</span><span class="type">number</span></div>
+          <div class="schema-field"><span class="key">title</span><span class="type">string</span></div>
+          <div class="schema-field"><span class="key">series</span><span class="type">string</span></div>
+          <div class="schema-field"><span class="key">year</span><span class="type">number</span></div>
+          <div class="schema-field"><span class="key">number</span><span class="type">number</span></div>
+          <div class="schema-field"><span class="key">img</span><span class="type">string</span></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <div class="params-title">Available series</div>
+        <div class="tag-list">
+          <span class="tag warn">Trilogy</span>
+          <span class="tag warn">Fazbear's Frights</span>
+          <span class="tag warn">Tales from the Pizzaplex</span>
+          <span class="tag">Fazbear Frights Graphic Novel Collection</span>
+          <span class="tag">Tales from the Pizzaplex Graphic Novel Collection</span>
+          <span class="tag">Freddy Files</span>
+          <span class="tag">Encyclopedia</span>
+          <span class="tag">Interactive Novels</span>
+          <span class="tag">Lore Relevant</span>
+          <span class="tag">Movie</span>
+        </div>
+      </div>
+
+      <hr class="sep">
+
+      <!-- GET /books -->
+      <div class="endpoint" id="books-list">
+        <div class="endpoint-head" onclick="toggle(this)">
+          <span class="method-badge">GET</span>
+          <div>
+            <div class="endpoint-path">/books</div>
+            <div class="endpoint-desc">List all books — filterable and paginated</div>
+          </div>
+          <span class="endpoint-toggle">▾</span>
+        </div>
+        <div class="endpoint-body">
+          <table class="params-table">
+            <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span class="param-name">series</span><span class="badge-optional">optional</span></td><td><span class="param-type">string</span></td><td>Filter by series name</td></tr>
+              <tr><td><span class="param-name">year</span><span class="badge-optional">optional</span></td><td><span class="param-type">number</span></td><td>Filter by release year</td></tr>
+              <tr><td><span class="param-name">limit</span><span class="badge-optional">optional</span></td><td><span class="param-type">number</span></td><td>Max results</td></tr>
+              <tr><td><span class="param-name">offset</span><span class="badge-optional">optional</span></td><td><span class="param-type">number</span></td><td>Skip N results</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block-header"><span class="code-label">Response</span></div>
+          <div class="code-block">
+<span class="json-brace">{</span>
+  <span class="json-key">"total"</span>: <span class="json-num">48</span>,
+  <span class="json-key">"count"</span>: <span class="json-num">3</span>,
+  <span class="json-key">"offset"</span>: <span class="json-num">0</span>,
+  <span class="json-key">"limit"</span>: <span class="json-num">3</span>,
+  <span class="json-key">"books"</span>: <span class="json-brace">[</span> <span class="json-null">/* book objects */</span> <span class="json-brace">]</span>
+<span class="json-brace">}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GET /books/random -->
+      <div class="endpoint" id="books-random">
+        <div class="endpoint-head" onclick="toggle(this)">
+          <span class="method-badge">GET</span>
+          <div>
+            <div class="endpoint-path">/books/random</div>
+            <div class="endpoint-desc">Returns a single random book</div>
+          </div>
+          <span class="endpoint-toggle">▾</span>
+        </div>
+        <div class="endpoint-body">
+          <p style="font-size:13px;color:var(--muted);">No parameters. Returns one book object at random.</p>
+        </div>
+      </div>
+
+      <!-- GET /books/:id -->
+      <div class="endpoint" id="books-id">
+        <div class="endpoint-head" onclick="toggle(this)">
+          <span class="method-badge">GET</span>
+          <div>
+            <div class="endpoint-path">/books/<span class="param">:id</span></div>
+            <div class="endpoint-desc">Fetch a book by numeric ID</div>
+          </div>
+          <span class="endpoint-toggle">▾</span>
+        </div>
+        <div class="endpoint-body">
+          <table class="params-table">
+            <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span class="param-name">id</span><span class="badge-required">required</span></td><td><span class="param-type">number</span></td><td>Numeric book ID</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- GET /books/title/:title -->
+      <div class="endpoint" id="books-title">
+        <div class="endpoint-head" onclick="toggle(this)">
+          <span class="method-badge">GET</span>
+          <div>
+            <div class="endpoint-path">/books/title/<span class="param">:title</span></div>
+            <div class="endpoint-desc">Fetch a book by slugified title</div>
+          </div>
+          <span class="endpoint-toggle">▾</span>
+        </div>
+        <div class="endpoint-body">
+          <table class="params-table">
+            <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span class="param-name">title</span><span class="badge-required">required</span></td><td><span class="param-type">string</span></td><td>Slugified title (e.g. <code style="font-family:'Share Tech Mono',monospace;color:var(--accent3)">the-silver-eyes</code>)</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block">GET /books/title/the-silver-eyes</div>
+        </div>
+      </div>
+
+      <!-- GET /books/search -->
+      <div class="endpoint" id="books-search">
+        <div class="endpoint-head" onclick="toggle(this)">
+          <span class="method-badge">GET</span>
+          <div>
+            <div class="endpoint-path">/books/search<span class="qparam">?q=</span></div>
+            <div class="endpoint-desc">Search books by title, series or year</div>
+          </div>
+          <span class="endpoint-toggle">▾</span>
+        </div>
+        <div class="endpoint-body">
+          <table class="params-table">
+            <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span class="param-name">q</span><span class="badge-required">required</span></td><td><span class="param-type">string</span></td><td>Case-insensitive partial match on title, series name, or year</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block-header"><span class="code-label">Response</span></div>
+          <div class="code-block">
+<span class="json-brace">{</span>
+  <span class="json-key">"query"</span>: <span class="json-str">"pizzaplex"</span>,
+  <span class="json-key">"total"</span>: <span class="json-num">9</span>,
+  <span class="json-key">"books"</span>: <span class="json-brace">[</span> <span class="json-null">/* ... */</span> <span class="json-brace">]</span>
+<span class="json-brace">}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GET /books/series -->
+      <div class="endpoint" id="books-series">
+        <div class="endpoint-head" onclick="toggle(this)">
+          <span class="method-badge">GET</span>
+          <div>
+            <div class="endpoint-path">/books/series &nbsp;&amp;&nbsp; /books/series/<span class="param">:series</span></div>
+            <div class="endpoint-desc">List all series, or get books from a specific series</div>
+          </div>
+          <span class="endpoint-toggle">▾</span>
+        </div>
+        <div class="endpoint-body">
+          <p style="font-size:13px;color:var(--muted);margin-bottom:14px;"><code style="font-family:'Share Tech Mono',monospace">GET /books/series</code> -> all series with slug + count.<br><code style="font-family:'Share Tech Mono',monospace">GET /books/series/trilogy</code> -> all books in the Trilogy.</p>
+          <div class="code-block">
+<span class="json-brace">{</span>
+  <span class="json-key">"total"</span>: <span class="json-num">10</span>,
+  <span class="json-key">"series"</span>: <span class="json-brace">[</span>
+    <span class="json-brace">{</span> <span class="json-key">"name"</span>: <span class="json-str">"Trilogy"</span>, <span class="json-key">"slug"</span>: <span class="json-str">"trilogy"</span>, <span class="json-key">"count"</span>: <span class="json-num">3</span> <span class="json-brace">}</span>,
+    <span class="json-null">...</span>
+  <span class="json-brace">]</span>
+<span class="json-brace">}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── IMAGES ──────────────────────────────────────────────────── -->
+    <div class="section" id="images">
+      <div class="section-header">        <div>
+          <h2>Images</h2>
+          <p class="section-sub">Redirects to GitHub raw content</p>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-head" onclick="toggle(this)">
+          <span class="method-badge">GET</span>
+          <div>
+            <div class="endpoint-path">/images/<span class="param">:category</span>/<span class="param">:type</span>/<span class="param">:filename</span></div>
+            <div class="endpoint-desc">Redirects (302) to GitHub raw image</div>
+          </div>
+          <span class="endpoint-toggle">▾</span>
+        </div>
+        <div class="endpoint-body">
+          <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">The API proxies image requests via a <strong>302 redirect</strong> to the GitHub repository's raw content at <code style="font-family:'Share Tech Mono',monospace;color:var(--accent3)">raw.githubusercontent.com/emilia-gomes2008/fnaf-api/main/…</code></p>
+          <div class="params-title">Image paths from the database</div>
+          <div class="tag-list" style="margin-bottom:14px;">
+            <span class="tag">images/chars/classic/freddy.png</span>
+            <span class="tag">images/chars/nightmare/…</span>
+            <span class="tag">images/chars/toy/…</span>
+            <span class="tag">images/books/trilogy/1.png</span>
+            <span class="tag">images/books/…</span>
+          </div>
+          <div class="code-block">GET /images/chars/classic/freddy.png
+-> 302 -> https://raw.githubusercontent.com/emilia-gomes2008/fnaf-api/main/images/chars/classic/freddy.png</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

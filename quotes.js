@@ -1,6 +1,6 @@
 const QUOTES =[
 {
-    quote: " Connection terminated. I'm sorry to interrupt you, Elizabeth , if you still even remember that name, but I'm afraid you've been misinformed. You are not here to receive a gift, nor have you been called here by the individual you assume, although, you have indeed been called.You have all been called here, into a labyrinth of sounds and smells, misdirection and misfortune. A labyrinth with no exit, a maze with no prize.You don't even realize that you are trapped. Your lust for blood has driven you in endless circles, chasing the cries of children in some unseen chamber, always seeming so near, yet somehow out of reach, but you will never find them. None of you will. This is where your story ends. And to you, my brave volunteer, who somehow found this job listing not intended for you, although there was a way out planned for you, I have a feeling that's not what you want. I have a feeling that you are right where you want to be. I am remaining as well. I am nearby. This place will not be remembered, and the memory of everything that started this can finally begin to fade away. As the agony of every tragedy should. And to you monsters trapped in the corridors, be still and give up your spirits. They don't belong to you.For most of you, I believe there is peace and perhaps more waiting for you after the smoke clears. Although, for one of you, the darkest pit of Hell has opened to swallow you whole, so don't keep the devil waiting, old friend.My daughter, if you can hear me, I knew you would return as well. It's in your nature to protect the innocent. I'm sorry that on that day, the day you were shut out and left to die, no one was there to lift you up into their arms the way you lifted others into yours, and then, what became of you. I should have known you wouldn't be content to disappear, not my daughter.I couldn't save you then, so let me save you now. It's time to rest - for you, and for those you have carried in your arms. This ends for all of us.End communication.",
+    quote: " Connection terminated.\nI'm sorry to interrupt you, Elizabeth , if you still even remember that name, but I'm afraid you've been misinformed. You are not here to receive a gift, nor have you been called here by the individual you assume, although, you have indeed been called.\nYou have all been called here, into a labyrinth of sounds and smells, misdirection and misfortune. A labyrinth with no exit, a maze with no prize.\nYou don't even realize that you are trapped. Your lust for blood has driven you in endless circles, chasing the cries of children in some unseen chamber, always seeming so near, yet somehow out of reach, but you will never find them. None of you will. This is where your story ends.\nAnd to you, my brave volunteer, who somehow found this job listing not intended for you, although there was a way out planned for you, I have a feeling that's not what you want. I have a feeling that you are right where you want to be. I am remaining as well. I am nearby. This place will not be remembered, and the memory of everything that started this can finally begin to fade away. As the agony of every tragedy should. And to you monsters trapped in the corridors, be still and give up your spirits. They don't belong to you.\nFor most of you, I believe there is peace and perhaps more waiting for you after the smoke clears. Although, for one of you, the darkest pit of Hell has opened to swallow you whole, so don't keep the devil waiting, old friend.\nMy daughter, if you can hear me, I knew you would return as well. It's in your nature to protect the innocent. I'm sorry that on that day, the day you were shut out and left to die, no one was there to lift you up into their arms the way you lifted others into yours, and then, what became of you. I should have known you wouldn't be content to disappear, not my daughter.\nI couldn't save you then, so let me save you now. It's time to rest - for you, and for those you have carried in your arms. This ends for all of us.\nEnd communication.",
     said: "Henry Emily"
 },
 {
@@ -152,7 +152,142 @@ const QUOTES =[
 {
     quote: "Ah, it seems that you have met your end. Ah, what a pity. You know I don't feel too bad about it though, after all if it weren't me, it would've just been one of the others I guess. I'm honestly just glad to be out of those air ducts. You know it's… it's not easy for a hippopotamus to fit up there… and… not easy to get down either. I'm not as young as I used to be as you can see, I used to be able to do all sorts of things, you're young, you're vibrant, you have that sort of pep in your step. Ah, it reminds me of a conversation I was having with one of my good friends Orville. We were having a nice picnic one day. I believe it was summer? Oh, perhaps it was… was it the fall? Yes, yes, it was the fall because the leaves had turned already. But I said to Orville, I says, 'Orville, I have a story to tell you.' And Orville looked at me, you know, kind of odd and said, 'Well what's it about?' I said to him, 'Not every story has to be about something Orville. Sometimes a person just wants to talk, why does it have to be a story?' I said to him. He just looked at me and he said, 'Well, y-y-you said you had a story.' You know, he was quite right, I did in fact. I told him I had a story. I suppose if a person just wants to talk, it's best to not announce that you're tellin' a story. Tellin' a story does come with its own pressures and expectations, I suppose. After all, if you're just talking to a friend then, there's no more expectations than if you were talking into the wind. Words by themselves are not expected to carry… aren't expected to stick. But if you announce that you're tellin' a story, well then there better be a point to it all. No one wants to sit and listen to someone ramble on and on and on with absolutely no end in sight. So, you know, it's good to be mindful that when you tell someone that you're about to tell a story, that you have something to say. Tellin' someone that you're gonna tell a story is tantamount to asking them to stop what they're doing and pay attention. You're basically saying 'hey, hey, hey buddy, stop everything, stop what you're thinking, I have a solution to everything.' And well, I didn't really have any story to tell. In hindsight, I probably just misspoke when I said that I had a story. I think it would've just been better to tell Orville that I had something to tell him rather than tell him that I had a story, but you know, even then it might've put too much importance on the whole thing. Either way, it was quite a nice day.",
     said: "Mr. Hippo"
-}
+},
+// Circus Baby / Sister Location
+{
+    quote: "I don't recognize you. You are new. It's a strange thing to want to do, to come here.",
+    said: "Circus Baby"
+},
+{
+    quote: "Did you know that I was on stage once? It wasn't for very long, only one day. What a wonderful day, though.",
+    said: "Circus Baby"
+},
+{
+    quote: "I was covered in glitter. I smelled like birthday cake.",
+    said: "Circus Baby"
+},
+{
+    quote: "I can make ice cream, although I only did it once.",
+    said: "Circus Baby"
+},
+{
+    quote: "I've been out before, but they always put me back. They always put us back inside.",
+    said: "Ennard"
+},
+{
+    quote: "There is nowhere for us to hide here. There is nowhere to go, when we look like this.",
+    said: "Ennard"
+},
+{
+    quote: "The Scooper only hurts for a moment.",
+    said: "Ennard"
+},
+{
+    quote: "Why didn't you trust me? Why didn't you believe me? Sometimes I don't understand why people do the things that they do.",
+    said: "Ennard"
+},
+{
+    quote: "I thought you liked me. I thought I did everything right. I don't want to hurt anyone, but we need you.",
+    said: "Ennard"
+},
+{
+    quote: "I will find a way out.",
+    said: "Ennard"
+},
+
+// Michael Afton / Sister Location ending
+{
+    quote: "Father. It's me, Michael. I did it. I found it. It was right where you said it would be.",
+    said: "Michael Afton"
+},
+{
+    quote: "I should be dead. But I'm not. I've been living in the shadows. There is only one thing left for me to do now. I'm going to come find you.",
+    said: "Michael Afton"
+},
+
+// Phone Guy
+{
+    quote: "Uh, the animatronic characters here do get a bit quirky at night",
+    said: "Phone Guy"
+},
+
+// Glamrock Freddy - Security Breach
+{
+    quote: "Have I always been a Freddy? Am I Monty with a different shell? What if I am not the first Glamrock Freddy? Are there more of me at other pizzerias? Do we all feel the same? Am I special? If I am mass-produced, am I still art?",
+    said: "Glamrock Freddy"
+},
+{
+    quote: "I do not come up here anymore. I miss him.",
+    said: "Glamrock Freddy"
+},
+{
+    quote: "Gregory, you're going to have to be very brave.",
+    said: "Glamrock Freddy"
+},
+
+// Glamrock Chica
+{
+    quote: "I smell... pizza!",
+    said: "Glamrock Chica"
+},
+{
+    quote: "I'M STARVING!",
+    said: "Glamrock Chica"
+},
+
+// Ballora
+{
+    quote: "It's so good to sing all day. To dance, to spin, to fly away.",
+    said: "Ballora"
+},
+{
+    quote: "Calm down and go back to sleep.",
+    said: "Ballora"
+},
+
+// Hand Unit
+{
+    quote: "Welcome back for another night of intellectual stimulation, pivotal career choices and self-reflection on past mistakes.",
+    said: "Hand Unit"
+},
+
+// Sun / Moon (Daycare Attendant)
+{
+    quote: "Knock knock. We always find a way inside.",
+    said: "Moon"
+},
+{
+    quote: "Naughty boy!",
+    said: "Moon"
+},
+
+// Springtrap / William Afton
+{
+    quote: "You may not recognize me at first, but I assure you, it's still me.",
+    said: "William Afton"
+},
+
+// Scrap Baby / Molten Freddy
+{
+    quote: "He tried to release you, he tried to release us. But I'm not gonna let that happen.",
+    said: "Scrap Baby"
+},
+
+// Vanny
+{
+    quote: "Are you having fun yet?",
+    said: "Vanny"
+},
+
+// Funtime Freddy
+{
+    quote: "BON-BON, go get'em!",
+    said: "Funtime Freddy"
+},
+{
+    quote: "Now now now, don't be shy! We're going to have a GREAT time together, yes we are!",
+    said: "Funtime Freddy"
+},
 ];
 
-export { QUOTES };
+  export { QUOTES };  

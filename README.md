@@ -1,32 +1,36 @@
 # FNaF API
 
-API REST com os **335 personagens** e **livros** do universo Five Nights at Freddy's, construída com **Cloudflare Workers**.
+A REST API with **353 characters**, **48 books**, and **66 quotes** from the Five Nights at Freddy's universe, hosted on **Cloudflare Workers**.
 
 **Base URL:** `https://fnaf-api.gsarvente.workers.dev`
 
+**Interactive Docs:** `https://fnaf-api.pages.dev/`
+
 ---
 
-## Endpoints de Personagens
+## Endpoints
 
 ### `GET /`
-Informações gerais da API (total de personagens, livros, tipos disponíveis, etc.)
+Returns general API info — total counts, available types, animals, series, and all endpoint listings.
 
 ---
 
+## Characters
+
 ### `GET /characters`
-Lista todos os personagens. Suporta filtros via query string:
+Returns all characters. Supports optional query filters:
 
-| Parâmetro  | Exemplo          | Descrição                  |
-|------------|------------------|----------------------------|
-| `type`     | `?type=Classic`  | Filtrar por tipo           |
-| `animal`   | `?animal=Bear`   | Filtrar por animal         |
-| `color`    | `?color=Blue`    | Filtrar por cor            |
-| `eyeColor` | `?eyeColor=Red`  | Filtrar por cor dos olhos  |
-| `year`     | `?year=1987`     | Filtrar por ano            |
-| `limit`    | `?limit=10`      | Quantidade de resultados   |
-| `offset`   | `?offset=20`     | Paginação                  |
+| Parameter  | Example           | Description                     |
+|------------|-------------------|---------------------------------|
+| `type`     | `?type=Classic`   | Filter by animatronic type      |
+| `animal`   | `?animal=Bear`    | Filter by animal                |
+| `color`    | `?color=Blue`     | Filter by body color            |
+| `eyeColor` | `?eyeColor=Red`   | Filter by eye color             |
+| `year`     | `?year=1987`      | Filter by debut year            |
+| `limit`    | `?limit=10`       | Number of results to return     |
+| `offset`   | `?offset=20`      | Pagination offset               |
 
-**Exemplo:**
+**Example:**
 ```
 GET /characters?type=Toy&animal=Bear&limit=5
 ```
@@ -34,12 +38,12 @@ GET /characters?type=Toy&animal=Bear&limit=5
 ---
 
 ### `GET /characters/random`
-Retorna um personagem aleatório.
+Returns a single random character.
 
 ---
 
 ### `GET /characters/:id`
-Busca personagem pelo ID numérico (1 a 335).
+Fetches a character by numeric ID (1 to 353).
 ```
 GET /characters/1    → Freddy Fazbear
 GET /characters/5    → Foxy
@@ -48,7 +52,7 @@ GET /characters/5    → Foxy
 ---
 
 ### `GET /characters/name/:name`
-Busca pelo nome em formato slug (letras minúsculas, espaços viram `-`).
+Fetches a character by name slug (lowercase, spaces replaced with `-`).
 ```
 GET /characters/name/freddy-fazbear
 GET /characters/name/springtrap
@@ -58,12 +62,12 @@ GET /characters/name/toy-bonnie
 ---
 
 ### `GET /types`
-Lista todos os 25 tipos com contagem de personagens.
+Returns all 25 types with their character counts.
 
 ---
 
 ### `GET /types/:type`
-Lista todos os personagens de um tipo específico.
+Returns all characters belonging to a specific type.
 ```
 GET /types/Classic
 GET /types/Withered
@@ -74,12 +78,12 @@ GET /types/Springlock
 ---
 
 ### `GET /animals`
-Lista todos os 56 animais com contagem de personagens.
+Returns all 56 animals with their character counts.
 
 ---
 
 ### `GET /animals/:animal`
-Lista todos os personagens de um animal específico.
+Returns all characters of a specific animal type.
 ```
 GET /animals/Bear
 GET /animals/Fox
@@ -89,7 +93,7 @@ GET /animals/Rabbit
 ---
 
 ### `GET /search?q=`
-Busca textual em nome, tipo, animal e cor.
+Full-text search across name, type, animal, and color.
 ```
 GET /search?q=springtrap
 GET /search?q=yellow
@@ -98,32 +102,32 @@ GET /search?q=shadow
 
 ---
 
-## Endpoints de Livros
+## Books
 
 ### `GET /books`
-Lista todos os livros. Suporta filtros via query string:
+Returns all books. Supports optional query filters:
 
-| Parâmetro | Exemplo           | Descrição                |
-|-----------|-------------------|--------------------------|
-| `series`  | `?series=Trilogy` | Filtrar por série        |
-| `year`    | `?year=2019`      | Filtrar por ano          |
-| `limit`   | `?limit=5`        | Quantidade de resultados |
-| `offset`  | `?offset=10`      | Paginação                |
+| Parameter | Example            | Description                 |
+|-----------|--------------------|-----------------------------|
+| `series`  | `?series=Trilogy`  | Filter by series            |
+| `year`    | `?year=2019`       | Filter by release year      |
+| `limit`   | `?limit=5`         | Number of results to return |
+| `offset`  | `?offset=10`       | Pagination offset           |
 
 ---
 
 ### `GET /books/random`
-Retorna um livro aleatório.
+Returns a single random book.
 
 ---
 
 ### `GET /books/:id`
-Busca livro pelo ID numérico.
+Fetches a book by numeric ID.
 
 ---
 
 ### `GET /books/title/:title`
-Busca pelo título em formato slug.
+Fetches a book by title slug.
 ```
 GET /books/title/the-silver-eyes
 ```
@@ -131,12 +135,12 @@ GET /books/title/the-silver-eyes
 ---
 
 ### `GET /books/series`
-Lista todas as séries disponíveis com contagem de livros.
+Returns all available series with book counts.
 
 ---
 
 ### `GET /books/series/:series`
-Lista todos os livros de uma série específica.
+Returns all books belonging to a specific series.
 ```
 GET /books/series/trilogy
 GET /books/series/fazbear-frights
@@ -145,7 +149,7 @@ GET /books/series/fazbear-frights
 ---
 
 ### `GET /books/search?q=`
-Busca textual em título, série e ano.
+Full-text search across title, series, and year.
 ```
 GET /books/search?q=silver
 GET /books/search?q=2019
@@ -153,21 +157,54 @@ GET /books/search?q=2019
 
 ---
 
-## Endpoint de Imagens
+## Quotes
+
+### `GET /quotes`
+Returns all quotes. Supports optional query filters:
+
+| Parameter | Example              | Description                 |
+|-----------|----------------------|-----------------------------|
+| `said`    | `?said=Freddy`       | Filter by character name    |
+| `limit`   | `?limit=10`          | Number of results to return |
+| `offset`  | `?offset=20`         | Pagination offset           |
+
+---
+
+### `GET /quotes/random`
+Returns a single random quote.
+
+---
+
+### `GET /quotes/:id`
+Fetches a quote by numeric ID.
+
+---
+
+### `GET /quotes/search?q=`
+Full-text search across quote text and character name.
+```
+GET /quotes/search?q=nightmare
+GET /quotes/search?q=freddy
+```
+
+---
+
+## Images
 
 ### `GET /images/:path`
-Retorna a imagem do personagem (redireciona para o GitHub).
+Returns a character image by redirecting to the GitHub raw asset URL.
 ```
 GET /images/chars/classic/freddy.png
 GET /images/chars/toy/bonnie.png
 ```
 
-O campo `img` em cada personagem já contém o caminho correto para usar neste endpoint.
+The `img` field on each character object already contains the correct path to use with this endpoint.
 
 ---
 
-## Estrutura do Personagem
+## Data Structures
 
+### Character
 ```json
 {
   "id": 1,
@@ -181,10 +218,7 @@ O campo `img` em cada personagem já contém o caminho correto para usar neste e
 }
 ```
 
----
-
-## Estrutura do Livro
-
+### Book
 ```json
 {
   "id": 1,
@@ -194,15 +228,49 @@ O campo `img` em cada personagem já contém o caminho correto para usar neste e
 }
 ```
 
+### Quote
+```json
+{
+  "id": 2,
+  "quote": "I'M SORRY BUT THERE WAS NEVER ENOUGH ROOM FOR BOTH OF US",
+  "said": "Funtime Foxy"
+}
+```
+
 ---
 
-## Tipos disponíveis (25)
-Classic, Withered, Toy, Shadow, Springlock, Phantom, Endo, Glamrock, Ruined, S.T.A.F.F. Bot, Prototype, Mascot Suit, Puppet Crew, e mais.
+## Stats
+
+| Resource   | Count |
+|------------|-------|
+| Characters | 353   |
+| Types      | 25    |
+| Animals    | 56    |
+| Books      | 48    |
+| Quotes     | 66    |
 
 ---
 
-## Estatísticas
-- **335** personagens no total
-- **25** tipos únicos
-- **56** animais únicos
-- **48** livros registados
+## Available Types (25)
+Classic, Withered, Toy, Shadow, Springlock, Phantom, Endo, Glamrock, Ruined, S.T.A.F.F. Bot, Prototype, Mascot Suit, Puppet Crew, and more.
+
+---
+
+## Development
+
+### Prerequisites
+- [Node.js](https://nodejs.org/)
+- [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/)
+
+### Running locally
+```bash
+npm install
+npm run dev
+```
+
+### Deploying
+```bash
+npm run deploy
+```
+
+Built on [Cloudflare Workers](https://workers.cloudflare.com/).

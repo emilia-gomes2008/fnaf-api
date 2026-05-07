@@ -2134,7 +2134,7 @@ const CHARS = [
   {
     name: "The One You Should Not Have Killed",
     animal: "Human",
-    type: "Human",
+    type: "Fake Identity",
     color: ["Yellow"],
     eyeColor: ["Black"],
     year: 2023,

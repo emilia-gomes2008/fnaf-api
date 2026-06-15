@@ -94,7 +94,7 @@ const CHARS = [
     year: 1993,
     img: "images/chars/endo/endo01.png"
   },
-{
+  {
     name: "Mike Schmidt",
     animal: "Human",
     type: "Fake Identity",
@@ -1242,7 +1242,7 @@ const CHARS = [
   },
   {
     name: "Old Man Consequences",
-    animal: "Aligator",
+    animal: "Alligator",
     type: "Other",
     color: ["Red"],
     eyeColor: ["Red"],
@@ -1953,7 +1953,7 @@ const CHARS = [
     color: ["Orange"],
     eyeColor: ["Orange"],
     year: "Unconfirmed",
-    img: "images/chars/human/fake/orange_guy.png"    
+    img: "images/chars/human/fake/orange_guy.png"
   },
   {
     name: "Green Man",
